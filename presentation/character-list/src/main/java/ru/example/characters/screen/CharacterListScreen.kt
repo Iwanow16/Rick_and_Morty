@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.example.characters.component.CharacterItem
@@ -18,8 +21,9 @@ import ru.example.ui_kit.LoadingIndicator
 @Composable
 internal fun CharacterListScreen(
     modifier: Modifier = Modifier,
-    uiState: CharacterListScreenUiState,
-    onCharacterClick: (Long) -> Unit
+    uiState: UiState,
+    onCharacterClick: (Long) -> Unit,
+    onLoadMore: () -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -30,17 +34,18 @@ internal fun CharacterListScreen(
                 .padding(paddingValues)
         ) {
             when (uiState) {
-                is CharacterListScreenUiState.Content -> CharacterListContent(
+                is UiState.Content -> CharacterListContent(
                     characters = uiState.characters,
-                    onCharacterClick = onCharacterClick
+                    onCharacterClick = onCharacterClick,
+                    onLoadMore = onLoadMore
                 )
 
-                is CharacterListScreenUiState.Error -> ErrorScreen(
+                is UiState.Error -> ErrorScreen(
                     errorMessage = uiState.error,
                     onRetry = {}
                 )
 
-                CharacterListScreenUiState.Loading -> LoadingIndicator()
+                UiState.Loading -> LoadingIndicator()
             }
         }
     }
@@ -50,10 +55,26 @@ internal fun CharacterListScreen(
 private fun CharacterListContent(
     modifier: Modifier = Modifier,
     characters: List<CharacterUi>,
-    onCharacterClick: (Long) -> Unit
+    onCharacterClick: (Long) -> Unit,
+    onLoadMore: () -> Unit
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                val totalItemsCount = layoutInfo.totalItemsCount
+                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+                if (lastVisibleItemIndex >= totalItemsCount - 5) {
+                    onLoadMore()
+                }
+            }
+    }
+
     LazyColumn(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        state = listState
     ) {
         items(characters) { character ->
             CharacterItem(
@@ -80,7 +101,8 @@ private fun CharacterListContentPreview() {
     MaterialTheme {
         CharacterListContent(
             characters = characters,
-            onCharacterClick = {}
+            onCharacterClick = {},
+            onLoadMore = {}
         )
     }
 }

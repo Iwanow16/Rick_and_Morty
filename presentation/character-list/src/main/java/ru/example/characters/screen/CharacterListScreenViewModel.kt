@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,14 +17,15 @@ import ru.example.characters.model.CharacterUi
 import ru.example.domain.usecases.GetCharactersUseCase
 import javax.inject.Inject
 
-internal sealed interface CharacterListScreenUiEvent {
-    data object LoadNextPage : CharacterListScreenUiEvent
+internal sealed interface UiEvent {
+    data object Init: UiEvent
+    data object LoadNextPage : UiEvent
 }
 
-internal sealed interface CharacterListScreenUiState {
-    data class Content(val characters: List<CharacterUi>) : CharacterListScreenUiState
-    data object Loading : CharacterListScreenUiState
-    data class Error(val error: String) : CharacterListScreenUiState
+internal sealed interface UiState {
+    data class Content(val characters: List<CharacterUi>) : UiState
+    data object Loading : UiState
+    data class Error(val error: String) : UiState
 }
 
 @HiltViewModel
@@ -31,36 +33,54 @@ internal class CharacterListScreenViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<CharacterListScreenUiState> =
-        MutableStateFlow(CharacterListScreenUiState.Loading)
-    val uiState: StateFlow<CharacterListScreenUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.Loading)
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+        .onSubscription { handleEvent(UiEvent.Init) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = CharacterListScreenUiState.Loading
+            initialValue = UiState.Loading
         )
 
-    fun handleEvent(event: CharacterListScreenUiEvent) {
+    private var currentPage = 1
+    private var isLoading = false
+
+    fun handleEvent(event: UiEvent) {
         when (event) {
-            CharacterListScreenUiEvent.LoadNextPage -> loadNextPage()
+            UiEvent.Init -> loadNextPage(currentPage)
+            UiEvent.LoadNextPage -> loadNextPage(currentPage)
         }
     }
 
-    private fun loadNextPage() {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun loadNextPage(page: Int) {
+        if (isLoading) return
 
-            getCharactersUseCase(page = 0)
+        isLoading = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            getCharactersUseCase(page = page)
                 .onSuccess { characters ->
-                    _uiState.update {
-                        CharacterListScreenUiState.Content(
-                            characters = characters.map { it.toCharacterUi() },
+                    _uiState.update { currentState ->
+                        val currentCharacters = if (currentState is UiState.Content) {
+                            currentState.characters
+                        } else {
+                            emptyList()
+                        }
+
+                        UiState.Content(
+                            characters = currentCharacters + characters.map { it.toCharacterUi() }
                         )
                     }
+                    currentPage++
                 }
                 .onFailure { exception ->
                     _uiState.update {
-                        CharacterListScreenUiState.Error(exception.message.toString())
+                        UiState.Error(exception.message.toString())
                     }
+                }
+                .also {
+                    isLoading = false
                 }
         }
     }

@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -19,12 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.example.characters.model.CharacterUi
+import ru.example.ui_kit.ui.theme.Rick_and_MortyTheme
 
 @Composable
 fun CharacterItem(
@@ -48,8 +52,14 @@ fun CharacterItem(
             AsyncImage(
                 model = character.imageUrl,
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth(0.35f)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth(0.35f)
+                    .fillMaxHeight()
             )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             Column {
                 Text(
                     text = character.name,
@@ -93,7 +103,7 @@ private fun CharacterListContentPreview() {
         origin = "unknown",
         imageUrl = "https://rickandmortyapi.com/api/character/avatar/44.jpeg"
     )
-    MaterialTheme {
+    Rick_and_MortyTheme {
         CharacterItem(
             character = character,
             onClick = {}

@@ -13,7 +13,7 @@ data class CharacterDto(
     @SerialName("gender")
     val gender: String,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("image")
     val image: String,
     @SerialName("location")
