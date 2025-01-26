@@ -1,13 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "ru.example.data"
+    namespace = "ru.example.ui_kit"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -18,11 +16,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "BASE_URL", "\"https://rickandmortyapi.com/api/\"")
-        }
         release {
-            buildConfigField("String", "BASE_URL", "\"https://rickandmortyapi.com/api/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,26 +32,17 @@ android {
         jvmTarget = "21"
     }
     buildFeatures {
-        buildConfig = true
+        compose = true
     }
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter)
-    implementation(libs.okhttp)
+    debugImplementation(libs.androidx.ui.tooling)
 
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-
-    implementation(project(":domain"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
