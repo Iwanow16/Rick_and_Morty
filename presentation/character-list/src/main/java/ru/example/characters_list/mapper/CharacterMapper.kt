@@ -1,6 +1,6 @@
-package ru.example.characters.mapper
+package ru.example.characters_list.mapper
 
-import ru.example.characters.model.CharacterUi
+import ru.example.characters_list.model.CharacterUi
 import ru.example.domain.model.Character
 
 fun Character.toCharacterUi(): CharacterUi =

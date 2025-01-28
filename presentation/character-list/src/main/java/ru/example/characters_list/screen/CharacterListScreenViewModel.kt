@@ -1,4 +1,4 @@
-package ru.example.characters.screen
+package ru.example.characters_list.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.example.characters.mapper.toCharacterUi
-import ru.example.characters.model.CharacterUi
+import ru.example.characters_list.mapper.toCharacterUi
+import ru.example.characters_list.model.CharacterUi
 import ru.example.domain.usecases.GetCharactersUseCase
 import javax.inject.Inject
 
 internal sealed interface UiEvent {
-    data object Init: UiEvent
+    data object Init : UiEvent
     data object LoadNextPage : UiEvent
 }
 
@@ -33,8 +33,7 @@ internal class CharacterListScreenViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState> =
-        MutableStateFlow(UiState.Loading)
+    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.Loading)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
         .onSubscription { handleEvent(UiEvent.Init) }
         .stateIn(

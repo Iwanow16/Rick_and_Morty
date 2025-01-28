@@ -1,4 +1,4 @@
-package ru.example.characters
+package ru.example.character_details
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

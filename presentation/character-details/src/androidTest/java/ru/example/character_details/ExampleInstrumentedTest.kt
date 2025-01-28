@@ -1,4 +1,4 @@
-package ru.example.characters
+package ru.example.character_details
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("ru.example.characters.test", appContext.packageName)
+        assertEquals("ru.example.character_domain.test", appContext.packageName)
     }
 }

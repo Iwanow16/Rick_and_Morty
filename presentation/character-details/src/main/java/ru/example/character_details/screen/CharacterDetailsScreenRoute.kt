@@ -1,4 +1,4 @@
-package ru.example.characters.screen
+package ru.example.character_details.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -7,18 +7,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-internal fun CharacterListScreenRoute(
+internal fun CharacterDetailsScreenRoute(
     modifier: Modifier = Modifier,
-    viewModel: CharacterListScreenViewModel = hiltViewModel<CharacterListScreenViewModel>(),
-    navigateToDetailsScreen: () -> Unit
+    viewModel: CharacterDetailsScreenViewModel =
+        hiltViewModel<CharacterDetailsScreenViewModel>(),
+    navigateToListScreen: () -> Unit,
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CharacterListScreen(
-        modifier = modifier,
+    CharacterDetailsScreen(
         uiState = uiState,
-        onCharacterClick = { navigateToDetailsScreen() },
-        onLoadMore = { viewModel.handleEvent(UiEvent.LoadNextPage) }
+        navigateToListScreen = navigateToListScreen
     )
 }

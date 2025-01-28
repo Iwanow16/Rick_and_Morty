@@ -1,4 +1,4 @@
-package ru.example.characters.screen
+package ru.example.characters_list.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -6,18 +6,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ru.example.characters.component.CharacterItem
-import ru.example.characters.model.CharacterUi
+import ru.example.characters_list.component.CharacterItem
+import ru.example.characters_list.model.CharacterUi
 import ru.example.ui_kit.ErrorScreen
 import ru.example.ui_kit.LoadingIndicator
+import ru.example.ui_kit.ui.theme.Rick_and_MortyTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CharacterListScreen(
     modifier: Modifier = Modifier,
@@ -27,6 +31,11 @@ internal fun CharacterListScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text("Character list") }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -98,7 +107,7 @@ private fun CharacterListContentPreview() {
         imageUrl = "https://rickandmortyapi.com/api/character/avatar/44.jpeg"
     )
     val characters = listOf(character, character.copy(id = 1))
-    MaterialTheme {
+    Rick_and_MortyTheme {
         CharacterListContent(
             characters = characters,
             onCharacterClick = {},

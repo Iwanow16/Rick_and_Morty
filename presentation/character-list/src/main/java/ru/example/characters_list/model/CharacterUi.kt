@@ -1,4 +1,4 @@
-package ru.example.characters.model
+package ru.example.characters_list.model
 
 data class CharacterUi(
     val id: Long,

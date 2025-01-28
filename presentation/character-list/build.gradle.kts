@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.example.characters"
+    namespace = "ru.example.characters_list"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -48,7 +48,6 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.compose)

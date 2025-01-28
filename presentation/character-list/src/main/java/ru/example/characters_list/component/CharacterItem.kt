@@ -1,4 +1,4 @@
-package ru.example.characters.component
+package ru.example.characters_list.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import ru.example.characters.model.CharacterUi
+import ru.example.characters_list.model.CharacterUi
 import ru.example.ui_kit.ui.theme.Rick_and_MortyTheme
 
 @Composable
