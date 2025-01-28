@@ -1,13 +1,22 @@
 # Rick and Morty
 This is a simple Android app that displays a list of characters from the popular TV show "Rick and Morty". The app uses a clean architecture approach and the MVI (Model-View-Intent) pattern.
 
+## Screenshots
+<div style="display: flex; gap: 10px;"> 
+  <img src="./screenshots/character_list.png" width="45%" /> 
+  <img src="./screenshots/character_details.png" width="45%" /> 
+</div>
+
 ## Modules
 The app's architecture consists of the following modules:
 - `app` - The main application module.
-- `ui_kit` - A module for shared UI components and styles.
+- `core`
+  - `ui_kit` - A module for shared UI components and styles.
 - `domain` - The domain module, containing the use cases and repositories.
 - `data` - The data module, responsible for fetching data from the API and managing local storage.
-- `character-list` - The module responsible for the character list screen.
+- `presentation`
+  - `character-list` - The module responsible for the character list screen.
+  - `character-details` - A module that handles the character detail screen, providing a detailed view of a selected character's information.
 
 ## Libraries
 | Library | Description |

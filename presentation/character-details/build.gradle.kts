@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.example.characters_list"
+    namespace = "ru.example.character_details"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -32,9 +32,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "21"
-    }
-    buildFeatures {
-        compose = true
     }
 }
 
