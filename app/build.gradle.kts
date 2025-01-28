@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":core:ui_kit"))
     implementation(project(":data"))
     implementation(project(":domain"))
+
     implementation(project(":presentation:character-details"))
     implementation(project(":presentation:character-list"))
 
